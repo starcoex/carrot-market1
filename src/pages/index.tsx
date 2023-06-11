@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { NextPage } from "next";
 import { fetchBillions } from "./api/api";
 import styled from "styled-components";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface Props {}
 interface IBillions {
@@ -37,16 +39,31 @@ const Index: NextPage<Props> = ({ results }: any) => {
       select: (data) => data.slice(0, 100),
     }
   );
+  const router = useRouter();
+  const onClick = (id: string, name: string) => {
+    router.push(
+      {
+        pathname: `/person/${id}`,
+        query: {
+          id: id,
+          name: name,
+        },
+      },
+      `/person/${id}`
+    );
+  };
   return (
     <div>
       <Seo title="Home" />
       <Container>
         {isLoading ? (
-          <h3>"Loading"</h3>
+          <h3>Loading...</h3>
         ) : (
           data?.map((value) => (
-            <div key={value.id}>
-              <Img src={value.squareImage} />
+            <div key={value.id} onClick={() => onClick(value.id, value.name)}>
+              <Link href={`/person/${value.name}`}>
+                <Img src={value.squareImage} />
+              </Link>
               <span>{value.id}</span>
               <span>{value.name.slice(0, 10)}</span>
             </div>
