@@ -1,6 +1,8 @@
 import { isDarkState, useDarkMode } from "@/atoms/atoms";
 import Home from "@/pages";
 import { NextPage } from "next";
+import { useTheme } from "next-themes";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -14,24 +16,36 @@ const NavBar: NextPage<Props> = ({}) => {
   const router = useRouter();
   const [isDark, setIsDark] = useRecoilState(isDarkState);
   const [darkMode, setDarkMode] = useDarkMode();
+  const { theme, setTheme } = useTheme();
   useEffect(() => {
     localStorage.setItem("isDarkState", JSON.stringify(isDark));
   }, [isDark]);
   return (
-    <label className="relative inline-flex items-center cursor-pointer">
-      {/* <input
-        type="chckbox"
-        className="sr-only peer"
-        onClick={() => {
-          setIsDark(!isDark);
-          localStorage.setItem("theme", isDark ? "dark" : "light");
-        }}
-        checked={localStorage.getItem("theme") == "dark" ? true : false}
-      />
-      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-      <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-        다크 모드 {localStorage.getItem("theme") == "dark" ? "On" : "Off"}
-      </span> */}
+    <>
+      <button
+        type="button"
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        // 클릭시 다크모드면 라이트로 바꿈
+        className={`mr-3 animate-pulse`}
+      >
+        {theme === "light" ? (
+          <Image
+            src={`/달.png`}
+            alt={""}
+            width={50}
+            height={50}
+            className={`rounded-3xl hover:cursor-pointer`}
+          />
+        ) : (
+          <Image
+            src={`/해.png`}
+            alt={""}
+            width={50}
+            height={50}
+            className={`rounded-3xl hover:cursor-pointer`}
+          />
+        )}
+      </button>
       <nav>
         <Link href="/" className={router.pathname === "/" ? "active" : ""}>
           Billions-Home
@@ -49,7 +63,7 @@ const NavBar: NextPage<Props> = ({}) => {
           }
         `}</style>
       </nav>
-    </label>
+    </>
   );
 };
 
