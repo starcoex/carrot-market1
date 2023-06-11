@@ -10,12 +10,12 @@ interface IFormInput {
 }
 
 const Index: NextPage<Props> = ({}) => {
-  const { register, watch, formState, handleSubmit } = useForm();
+  const { register, watch, formState, handleSubmit, setValue } = useForm();
   const [hours, setHours] = useRecoilState(housrSelector);
   const onVaild = (data: any) => {
     console.log(data);
   };
-  console.log(register("miniutes"));
+  console.log(setValue);
   return (
     <form onSubmit={handleSubmit(onVaild)}>
       <input
