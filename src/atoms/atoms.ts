@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
 export const isDarkState = atom({
@@ -37,4 +37,18 @@ export const personState = atom<IPerson>({
   key: "personState",
   default: undefined,
   effects_UNSTABLE: [persistAtom],
+});
+
+export const minuteState = atom({
+  key: "minuteState",
+  default: 0,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const housrSelector = selector({
+  key: "hours",
+  get: ({ get }) => {
+    const minuter = get(minuteState);
+    return minuter / 60;
+  },
 });
