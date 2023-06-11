@@ -4,6 +4,9 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { fetchBillion } from "../api/api";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { personState } from "@/atoms/atoms";
+import { useEffect } from "react";
 
 interface Props {}
 interface RouterProps {
@@ -54,18 +57,38 @@ const Img = styled.img`
 `;
 
 const Person: NextPage<Props> = ({}) => {
-  const router = useRouter();
+  const {
+    query: { id },
+  } = useRouter();
+  const [person, setPerson] = useRecoilState(personState);
   const { isLoading, data } = useQuery<IPerson>(["Person"], () =>
-    fetchBillion(router.query.id as string)
+    fetchBillion(id as string)
   );
-  console.log(router);
+  // useEffect(() => {
+  //   fetch(
+  //     `https://billions-api.nomadcoders.workers.dev/person/${router.query.id}`
+  //   )
+  //     .then((response) => response.json())
+  //     .then((json) => console.log(json));
+  // }, [person]);
+  useEffect(() => {
+    (async () => {
+      const response = await fetch(
+        `https://billions-api.nomadcoders.workers.dev/person/${id}`
+      );
+      const json = await response.json();
+      setPerson(json);
+    })();
+  }, []);
+  console.log(person);
   return (
     <div>
       <Seo title="Person" />
+      <h1>{person?.city}</h1>
       <h1>{isLoading ? "Loading..." : data?.name}</h1>
       {
         <div>
-          <Img src={data?.squareImage} />
+          <Img src={person?.squareImage} />
           <h1>{data?.name}</h1>
           <h2>
             NetWorth: {String(Math.trunc(data?.netWorth as number)).slice(0, 3)}{" "}
@@ -84,14 +107,14 @@ const Person: NextPage<Props> = ({}) => {
           <hr />
           {
             <ul>
-              {data?.financialAssets.map((value) => (
+              {data?.financialAssets?.map((value) => (
                 <li key={value.numberOfShares}>Ticket : {value.ticker}</li>
               ))}
             </ul>
           }
           {
             <ul>
-              {data?.financialAssets.map((value) => (
+              {data?.financialAssets?.map((value) => (
                 <li key={value.numberOfShares}>
                   Shares : {value.numberOfShares}
                 </li>
@@ -115,7 +138,16 @@ const Person: NextPage<Props> = ({}) => {
             <span>Shares: {data?.financialAssets[4].numberOfShares}</span>
             <span>Shares: {data?.financialAssets[5].numberOfShares}</span>
           </div> */}
-          <div>
+          {
+            <ul>
+              {data?.financialAssets?.map((value) => (
+                <li key={value.exerciseOptionPrice}>
+                  Exercise Price : {value.exerciseOptionPrice}
+                </li>
+              ))}
+            </ul>
+          }
+          {/* <div>
             <span>
               Exercise Price : $
               {data?.financialAssets[0].exerciseOptionPrice === undefined
@@ -137,7 +169,7 @@ const Person: NextPage<Props> = ({}) => {
             <span>
               Exercise Price : ${data?.financialAssets[5].exerciseOptionPrice}
             </span>
-          </div>
+          </div> */}
         </div>
       }
     </div>

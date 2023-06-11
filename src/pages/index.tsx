@@ -40,13 +40,12 @@ const Index: NextPage<Props> = ({ results }: any) => {
     }
   );
   const router = useRouter();
-  const onClick = (id: string, name: string) => {
+  const onClick = (id: string) => {
     router.push(
       {
         pathname: `/person/${id}`,
         query: {
           id: id,
-          name: name,
         },
       },
       `/person/${id}`
@@ -60,7 +59,7 @@ const Index: NextPage<Props> = ({ results }: any) => {
           <h3>Loading...</h3>
         ) : (
           data?.map((value) => (
-            <div key={value.id} onClick={() => onClick(value.id, value.name)}>
+            <div key={value.id} onClick={() => onClick(value.id)}>
               <Link href={`/person/${value.name}`}>
                 <Img src={value.squareImage} />
               </Link>

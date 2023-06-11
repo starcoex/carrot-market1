@@ -6,7 +6,7 @@ export const fetchBillions = async () => {
 
 export const fetchBillionPerson = async (name: string) => {
   return await (
-    await fetch(` https://billions-api.nomadcoders.workers.dev/person/${name}`)
+    await fetch(`https://billions-api.nomadcoders.workers.dev/person/${name}`)
   ).json();
 };
 
