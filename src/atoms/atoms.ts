@@ -67,6 +67,12 @@ export const minuteState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const todosState = atom<string[]>({
+  key: "todosState",
+  default: ["a", "b", "c", "d", "e", "f", "g"],
+  effects_UNSTABLE: [persistAtom],
+});
+
 export const housrSelector = selector({
   key: "hours",
   get: ({ get }) => {
